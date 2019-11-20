@@ -14,20 +14,21 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def home():
-    data = mongo.db.data.find()
+    mars = mongo.db.mars.find_one()
    #print(mars)
-    return render_template("index.html", data = "data")
+    return render_template("index.html", mars = mars)
 
 
 @app.route("/scrape")
 def scrape():
+     #return "Scrape Succesful"
     #mars= {"news_title", "news_p", "featured_image_url", "mars_weather", "html_table", "hemisphere_image_urls"}
-    #return render_template("index.html", text = "")
-    data = web_scraping.scrape_info()
+    mars = mongo.db.mars
+    mars_data = web_scraping.scrape()
 
-    mongo.db.data.update({}, data, upsert=True)
+    mars.update({}, mars_data, upsert=True)
 
-    return redirect("/")
+    return "Scrape Succesful" #redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)
